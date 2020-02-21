@@ -51,3 +51,6 @@ CREATE TABLE weather (
     events varchar,
     wind_dir_degrees INTEGER,
     zip_code INTEGER);
+   
+   
+   
