@@ -3,6 +3,7 @@
 select *from trip
 
 
+
     -- id INTEGER PRIMARY KEY,
     -- duration INTEGER,
     -- start_date varchar,
@@ -20,7 +21,9 @@ update trip
 set start_date = to_timestamp(start_date, 'MM/DD/YYYY hh:mm')
 
 
+
 -- czy zmieniać zapis zip_code 00,000 => 00-000
 
-
+update trip 
+set zip_code = replace (zip_code ,',','-')
 
