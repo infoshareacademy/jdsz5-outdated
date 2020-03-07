@@ -17,13 +17,19 @@ select *from trip
     
 -- zmienić typ i format dat: start_date, end_date (m)m/(d)d/rrrr hh:mm => dd/mm/rrrr hh:mm
    
+select start_date, to_timestamp(start_date, 'MM/DD/YYYY HH24:MI:SS')
+from trip
+
+
 update trip 
-set start_date = to_timestamp(start_date, 'MM/DD/YYYY hh:mm')
+set start_date = to_timestamp(start_date, 'MM/DD/YYYY HH24:MI:SS')
 
 
 
 -- czy zmieniać zapis zip_code 00,000 => 00-000
 
-update trip 
-set zip_code = replace (zip_code ,',','-')
+select zip_code, replace(zip_code, "," , "-")
+from trip
+ 
+set zip_code = replace (zip_code , "," , "-")
 
