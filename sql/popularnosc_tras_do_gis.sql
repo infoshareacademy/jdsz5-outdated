@@ -1,16 +1,23 @@
 
 
 select *from trip
+select * from station
 
-
-select 
+select
 distinct start_station_name,
-count(id) over(partition by start_station_name  ) as popularna_trasa_start
+s.lat,
+s.long,
+count(t.id) over(partition by start_station_name) as popularnosc_trasy_start
 from trip t 
-order by popularna_trasa_start
+join station s on s.name= t.start_station_name
+order by popularnosc_trasy_start
+
 
 select 
 distinct end_station_name,
-count(id) over(partition by end_station_name) as popularna_trasa_end
+s.lat,
+s.long,
+count(t.id) over(partition by end_station_name) as popularnosc_trasy_end
 from trip t 
-order by popularna_trasa_end 
+join station s on s.name= t.end_station_name
+order by popularnosc_trasy_end 
