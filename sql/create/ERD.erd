@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="ERD schema outdated">
+	<entities>
+		<data-source id="postgres-jdbc-16fe8c8d762-4f2d403bec4ab3cc">
+			<entity id="1" name="station" fq-name="public.station">
+				<path name="public"/>
+				<path name="projekt_SQL"/>
+			</entity>
+			<entity id="2" name="status" fq-name="public.status">
+				<path name="public"/>
+				<path name="projekt_SQL"/>
+			</entity>
+			<entity id="3" name="trip" fq-name="public.trip">
+				<path name="public"/>
+				<path name="projekt_SQL"/>
+			</entity>
+			<entity id="4" name="weather" fq-name="public.weather">
+				<path name="public"/>
+				<path name="projekt_SQL"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations/>
+</diagram>
