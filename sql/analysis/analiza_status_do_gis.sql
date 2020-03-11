@@ -31,7 +31,16 @@ group by 1, 2
 select 
 station_id,
 bikes_available,
-docks_available
+docks_available,
+s.lat,
+s.long
 from week_days
-where hour = 5
+join station s on s.id = station_id
+where hour = 17
+
+select *from trip
+select * from station
+select * from status s 
+
+
 
