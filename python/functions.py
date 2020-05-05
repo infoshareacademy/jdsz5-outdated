@@ -35,10 +35,17 @@ def plot_hist(df,column=None):
 
 def description(df,column=None):
 
-    if not column:
-        column = df.columns[0]
+    try:
+        
+        if not column:
+            column = df.columns[0]
 
-    df[df.columns[column]].describe()
+
+        df[column].describe()
+
+    except TypeError:
+        print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
+    
 
 ## Funkcja porównująca średnie
 
