@@ -33,7 +33,12 @@ def plot_hist(df,column=None):
     plt.hist(df[column])
     plt.title(column)
 
+def description(df,column=None):
 
+    if not column:
+        column = df.columns[0]
+
+    df[df.columns[column]].describe()
 
 ## Funkcja porównująca średnie
 
