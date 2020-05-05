@@ -33,18 +33,17 @@ def plot_hist(df,column=None):
     plt.hist(df[column])
     plt.title(column)
 
-def description(df,column=None):
-
-    try:
+def box_plot(df,column=None):
+    
+    if not column:
+        column = df.columns[0]
         
-        if not column:
-            column = df.columns[0]
+    plt.box(df[column])
+    plt.title(column)
 
+def description(df):
 
-        df[column].describe()
-
-    except TypeError:
-        print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
+    df.describe()
     
 
 ## Funkcja porównująca średnie
