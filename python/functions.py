@@ -43,7 +43,8 @@ def box_plot(df,column=None):
 
 def description(df):
 
-    df.describe()
+    data = df.describe()
+    return data
     
 
 ## Funkcja porównująca średnie
