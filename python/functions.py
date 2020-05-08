@@ -1,4 +1,7 @@
 
+from __future__ import print_function
+from ipywidgets import interact, interactive, fixed, interact_manual
+import ipywidgets as widgets
 import pandas as pd
 from matplotlib import pyplot as plt 
 import numpy as np 
@@ -32,20 +35,19 @@ def plot_hist(df,column=None):
         
     plt.hist(df[column])
     plt.title(column)
-
-def box_plot(df,column=None):
-    
-    if not column:
-        column = df.columns[0]
-        
-    plt.box(df[column])
-    plt.title(column)
+   
+# dfs = {
+#         "patient": Datasets.patient,
+#         "region": Datasets.region,
+#         "weather": Datasets.weather}
+            
+# def description(x):
+#     return dfs[x].describe()
 
 def description(df):
-
     data = df.describe()
     return data
-    
+
 
 ## Funkcja porównująca średnie
 
