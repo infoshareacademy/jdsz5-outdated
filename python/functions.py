@@ -269,3 +269,14 @@ def przedzialy_ufnosci_srednia(data, confidence):
 
     except Exception as e:
         print(e)
+        
+# test porównania wariancji
+def porownaj_wariancje(x,y, z='trimmed'):
+    
+    if x is y:
+        print('Należy wybrać dwie różne kolumny.')
+        
+    else:
+        
+        try:
+            st.levene(x, y, center='trimmed')
