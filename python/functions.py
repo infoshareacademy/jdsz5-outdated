@@ -234,3 +234,38 @@ def bar_plot(df, columns, values, aggfunc='count'):
 
     except Exception as e:
         print(e)
+
+
+# Funkcja przeksztalcania roku w aktualny wiek
+def obliczanie_wieku(df, column):
+    try:
+        data = np.array(df[column].dropna().values)
+        f = lambda x: pd.datetime.now().year - x
+        wiek = f(data)
+
+        return wiek
+
+    except TypeError:
+        print('Dane powinny byc rokiem urodzenia')
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
+
+# Obliczanie przedzialow ufnosci
+def przedzialy_ufnosci_srednia(data, confidence):
+    try:
+        data = 1.0 * data
+        n = len(data)
+        mean = np.mean(data)
+        sterr = st.sem(data)
+        h = sterr * st.t.ppf((1 + confidence) / 2.0, n - 1)
+        return f'Srednia: {mean}. Przedzialy ufnosci: {mean - h}, {mean + h}'
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
