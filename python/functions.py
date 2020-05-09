@@ -35,18 +35,10 @@ def plot_hist(df,column=None):
         
     plt.hist(df[column])
     plt.title(column)
-   
-# dfs = {
-#         "patient": Datasets.patient,
-#         "region": Datasets.region,
-#         "weather": Datasets.weather}
-            
-# def description(x):
-#     return dfs[x].describe()
 
-def description(df):
-    data = df.describe()
-    return data
+            
+def description(x):
+    return dfs[x].describe()
 
 
 ## Funkcja porównująca średnie
