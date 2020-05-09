@@ -166,3 +166,71 @@ def sprawdz_rozklad(x):
     except TypeError:
         print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
 
+
+# Wykresy
+
+def boxplot(df, categorical, numerical):
+    try:
+        if not df.dtypes[numerical] in ('float', 'int'):
+            raise TypeError('Trzecia zmienna powinna byc numeryczna')
+
+        if not df.dtypes[categorical] == 'object':
+            raise TypeError('Druga zmienna powinna byc kategoryczna')
+
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError('Pierwsza zmienna powinna byc data framem')
+
+        df.pivot(columns=categorical, values=numerical).plot.box()
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
+
+
+def time_plot(df, data_col, dates_col, **kwargs):
+    try:
+        start = kwargs.get('start', None)
+        end = kwargs.get('end', None)
+
+        if start == None and end != None:
+            df = df[df[dates_col] <= end]
+
+        elif end == None and start != None:
+            df = df[df[dates_col] >= start]
+
+        elif start == None and end == None:
+            df = df
+        else:
+            df = df[(df[dates_col] >= start) & (df[dates_col] <= end)]
+
+        df.groupby(dates_col)[data_col].count().cumsum().plot()
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
+
+
+def line_plot(df, index, columns, values, aggfunc='count'):
+    try:
+        return df.pivot_table(index=index, columns=columns, values=values, aggfunc=aggfunc).plot()
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
+
+
+def bar_plot(df, columns, values, aggfunc='count'):
+    try:
+        return df.pivot_table(columns=columns, values=values, aggfunc=aggfunc).plot.bar()
+
+    except (KeyError, NameError):
+        print('Niepoprawna nazwa zmiennej')
+
+    except Exception as e:
+        print(e)
