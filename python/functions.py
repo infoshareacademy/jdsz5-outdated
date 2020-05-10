@@ -36,7 +36,12 @@ def plot_hist(df,column=None):
     plt.hist(df[column])
     plt.title(column)
 
-            
+patient = import_data(Datasets.patient)
+region = import_data(Datasets.region)
+weather = import_data(Datasets.weather)
+
+dfs = {'patient': patient,'region': region,'weather': weather}
+          
 def description(x):
     return dfs[x].describe()
 
