@@ -264,11 +264,5 @@ def przedzialy_ufnosci_srednia(data, confidence):
         
 # test porównania wariancji
 def porownaj_wariancje(x,y, z='trimmed'):
+       st.levene(x, y, center='trimmed')
     
-    if x is y:
-        print('Należy wybrać dwie różne kolumny.')
-        
-    else:
-        
-        try:
-            st.levene(x, y, center='trimmed')
