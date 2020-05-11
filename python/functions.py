@@ -58,6 +58,12 @@ def porownaj_srednie(x,y, a = 0.05):
         print('Należy wybrać dwie różne kolumny.')
         
     else:
+        print('Sprawdzanie normalności rozkładu 1 zmiennej')
+        sprawdz_rozklad(x)
+        
+        
+        print('\nSprawdzanie normalności rozkładu 2 zmiennej:')
+        sprawdz_rozklad(y)
         
         try:
             mx = np.mean(x)
@@ -98,7 +104,7 @@ def porownaj_srednie(x,y, a = 0.05):
 ##Test normalności rozkładu
 
 def sprawdz_rozklad(x):
-    #x.dropna(inplace=True) #konieczne jest usunięcie nanów by f-cja działała
+    x.dropna(inplace=True) #konieczne jest usunięcie nanów by f-cja działała
     N = len(x)
     
     try:
@@ -151,13 +157,13 @@ def sprawdz_rozklad(x):
             stTest = np.sqrt(N)*Dn
             pvalue = 1 - rozkladKS.cdf(stTest)
 
-            print('Dn = {}, p-value = {}, wartość p-value jest {} od Dn'.format(Dn, pvalue, 'większa' if pvalue > Dn else 'mniejsza'))
+            print('\nDn = {}, p-value = {}, wartość p-value jest {} od Dn'.format(Dn, pvalue, 'większa' if pvalue > Dn else 'mniejsza'))
 
             if pvalue > Dn:
-                print('Wartość pvalue jest wyższa od statystyki testowej Dn - można uznać, że próba podchodzi z rozkładu normalnego')
+                print('\nWartość pvalue jest wyższa od statystyki testowej Dn - można uznać, że próba podchodzi z rozkładu normalnego')
 
             else:
-                print('Wartość pvalue jest niższa od statystyki Dn - nie można uznać, że próba pochodzi z rozkładu normalnego')
+                print('\nWartość pvalue jest niższa od statystyki Dn - nie można uznać, że próba pochodzi z rozkładu normalnego')
 
 
     except TypeError:
