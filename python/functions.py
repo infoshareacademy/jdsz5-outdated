@@ -276,4 +276,22 @@ def przedzialy_ufnosci_srednia(data, confidence):
 # test porównania wariancji
 def porownaj_wariancje(x,y, z='trimmed'):
        st.levene(x, y, center='trimmed')
+        
+def bootstrap_gender(x = np.array(cases.loc[cases['sex'] == 'male']['patient_id']), y = np.array(cases.loc[cases['sex'] == 'female']['patient_id']), n =1000, alpha = 0.05):
+    pvalues = []
+
+    cases = patient.groupby(['sex','age']).count()['patient_id'].reset_index()
+    cases.groupby(['sex']).mean()
+    
+    
+    for i in range(n):
+        x_sample = np.random.choice(x, len(x), replace = True)
+        y_sample = np.random.choice(y, len(y), replace = True)
+        
+        tst = ttest_ind(x_sample, y_sample)
+        
+        p = (tst.pvalue <alpha)*1
+        pvalues.append(p)
+        
+    print('Wynik testu istotny w {0} symulacji'.format( "{:.1%}".format(np.mean(pvalues))))
     
