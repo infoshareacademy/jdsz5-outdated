@@ -28,17 +28,24 @@ def import_data(path=Datasets.weather):
     data = pd.read_csv(path)
     return data 
     
-def plot_hist(df,column=None):
-    
-    if not column:
-        column = df.columns[0]
-        
-    plt.hist(df[column])
-    plt.title(column)
-
+#import danych
 patient = import_data(Datasets.patient)
+patient.dropna(subset=['sex','birth_year','age','country','confirmed_date','state'], inplace=True)
 region = import_data(Datasets.region)
+region.dropna(how='all')
 weather = import_data(Datasets.weather)
+patient.drop(columns=['global_num','disease','infection_order','infected_by','contact_number'], inplace=True) 
+region.drop(columns=['latitude','longitude'], inplace=True)
+weather.drop(columns=['code','min_temp','max_temp','precipitation','max_wind_speed','most_wind_direction'], inplace=True)
+patient_region = pd.merge(patient, region, how='inner', on=['province', 'city'])
+patient_weather = pd.merge(patient, weather, how='inner', left_on=['confirmed_date', 'province'], right_on=['date', 'province'])
+
+def plot_hist(x):
+    plt.figure(figsize=(15,8))
+    plt.hist(patient_weather.iloc[:,x]) 
+    plt.title(patient_weather.columns[x])
+
+
 
 dfs = {'patient': patient,'region': region,'weather': weather}
           
@@ -277,18 +284,16 @@ def przedzialy_ufnosci_srednia(data, confidence):
 def porownaj_wariancje(x,y, z='trimmed'):
        st.levene(x, y, center='trimmed')
         
-def bootstrap_gender(x = np.array(cases.loc[cases['sex'] == 'male']['patient_id']), y = np.array(cases.loc[cases['sex'] == 'female']['patient_id']), n =1000, alpha = 0.05):
+def bootstrap_gender(x = np.array(patient.groupby(['sex','age']).count()['patient_id'].reset_index().loc[patient.groupby(['sex','age']).count()['patient_id'].reset_index()['sex'] == 'male']['patient_id']), y = np.array(patient.groupby(['sex','age']).count()['patient_id'].reset_index().loc[patient.groupby(['sex','age']).count()['patient_id'].reset_index()['sex'] == 'female']['patient_id']), n =1000, alpha = 0.05):
     pvalues = []
 
-    cases = patient.groupby(['sex','age']).count()['patient_id'].reset_index()
-    cases.groupby(['sex']).mean()
     
     
     for i in range(n):
         x_sample = np.random.choice(x, len(x), replace = True)
         y_sample = np.random.choice(y, len(y), replace = True)
         
-        tst = ttest_ind(x_sample, y_sample)
+        tst = st.ttest_ind(x_sample, y_sample)
         
         p = (tst.pvalue <alpha)*1
         pvalues.append(p)
