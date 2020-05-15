@@ -68,7 +68,7 @@ def porownaj_srednie(a = 0.05):
                                var_column2 = list(patient[column1].unique())):
             pass
             @interact
-            def selectCounter(counter = ['patient_id']):
+            def selectCounter(counter = ['birth_year','patient_id']):
                 sprawdz_rozklad1(patient.loc[patient[column1] == var_column1, counter]) 
                 sprawdz_rozklad1(patient.loc[patient[column1] == var_column2, counter])
                 
@@ -105,7 +105,6 @@ def porownaj_srednie(a = 0.05):
 
                 except:
                     print('Wystąpił nieoczekiwany błąd')
-
 
 
 
