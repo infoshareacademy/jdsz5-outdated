@@ -93,7 +93,7 @@ def porownaj_srednie(x,y, a = 0.05):
             if pvalue > a:
                   print('Nie ma podstaw do odrzucenia hipotezy zerowej')
             else:
-                  print('Istnieją przesłanki do odrzucenia hipotezy zerowej na rzecz alternatywnej - średnia mx jest niższa od średniej my')
+                  print('Istnieją przesłanki do odrzucenia hipotezy zerowej na rzecz alternatywnej - średnia pierwszej zmiennej jest niższa od średniej drugiej zmiennej')
 
 
         except TypeError:
@@ -156,6 +156,7 @@ def sprawdz_rozklad(x):
             plt.plot(xsorted,F,color="black")
             plt.scatter(xsorted, Fni, color="red")
             plt.legend(["F(x)","Fni"])
+            plt.show()
             
             #obliczanie wartości
             rozkladKS = st.kstwobign()
