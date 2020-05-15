@@ -110,73 +110,76 @@ def porownaj_srednie(x,y, a = 0.05):
 
 ##Test normalności rozkładu
 
-def sprawdz_rozklad(x):
-    x.dropna(inplace=True) #konieczne jest usunięcie nanów by f-cja działała
-    N = len(x)
-    
-    try:
-        if N <= 100:
-            #Test Shapiro-Wilka
-            st.shapiro(x)
-            test = st.shapiro(x)[0]
-            pvalue = st.shapiro(x)[1]
-            
-            print('Statystyka testowa = {}, p-value = {}, wartość p-value jest {} od statystyki testowej'.format(test, pvalue, 'większa' if pvalue > test else 'mniejsza'))
+def sprawdz_rozklad():
+    @interact
+    def test(column = list(patient.select_dtypes('number').columns)):
 
-            if pvalue > test:
-                print('Wartość pvalue jest wyższa od statystyki testowej - można uznać, że próba podchodzi z rozkładu normalnego')
+        x= patient[column]
+        x.dropna(inplace=True) #konieczne jest usunięcie nanów by f-cja działała
+        N = len(x)
 
-            else:
-                print('Wartość pvalue jest niższa od statystyki testowej - nie można uznać, że próba pochodzi z rozkładu normalnego')
+        try:
+            if N <= 100:
+                #Test Shapiro-Wilka
+                st.shapiro(x)
+                test = st.shapiro(x)[0]
+                pvalue = st.shapiro(x)[1]
 
-            
-            
-        else:
-            #Test Kołomogowa-Smirnova
-            #Ewentualnie zamiast rysowania tutaj wykresu można przywołać zdefiniowaną funkcję
-                      
-            
-            x = np.array(x)
-            x = x.reshape(N,)
+                print('Statystyka testowa = {}, p-value = {}, wartość p-value jest {} od statystyki testowej'.format(test, pvalue, 'większa' if pvalue > test else 'mniejsza'))
 
-            #plt.hist(x, bins = 25, edgecolor = 'black')
-            
-            mx = np.mean(x)
-            sx = np.std(x)
-            
-            rozkladNormalny = st.norm(mx,sx)
-            
-            xsorted = np.sort(x)
-            
-            F = rozkladNormalny.cdf(xsorted)
-            
-            Fni = np.fromiter(range(1, N+1), dtype =int)/N
-            
-            #wykres dystrybuanty
-            plt.plot(xsorted,F,color="black")
-            plt.scatter(xsorted, Fni, color="red")
-            plt.legend(["F(x)","Fni"])
-            plt.show()
-            
-            #obliczanie wartości
-            rozkladKS = st.kstwobign()
+                if pvalue > test:
+                    print('Wartość pvalue jest wyższa od statystyki testowej - można uznać, że próba podchodzi z rozkładu normalnego')
 
-            Dn = max(np.abs(F - Fni))
-            stTest = np.sqrt(N)*Dn
-            pvalue = 1 - rozkladKS.cdf(stTest)
+                else:
+                    print('Wartość pvalue jest niższa od statystyki testowej - nie można uznać, że próba pochodzi z rozkładu normalnego')
 
-            print('\nDn = {}, p-value = {}, wartość p-value jest {} od Dn'.format(Dn, pvalue, 'większa' if pvalue > Dn else 'mniejsza'))
 
-            if pvalue > Dn:
-                print('\nWartość pvalue jest wyższa od statystyki testowej Dn - można uznać, że próba podchodzi z rozkładu normalnego')
 
             else:
-                print('\nWartość pvalue jest niższa od statystyki Dn - nie można uznać, że próba pochodzi z rozkładu normalnego')
+                #Test Kołomogowa-Smirnova
+                #Ewentualnie zamiast rysowania tutaj wykresu można przywołać zdefiniowaną funkcję
 
 
-    except TypeError:
-        print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
+                x = np.array(x)
+                x = x.reshape(N,)
 
+                #plt.hist(x, bins = 25, edgecolor = 'black')
+
+                mx = np.mean(x)
+                sx = np.std(x)
+
+                rozkladNormalny = st.norm(mx,sx)
+
+                xsorted = np.sort(x)
+
+                F = rozkladNormalny.cdf(xsorted)
+
+                Fni = np.fromiter(range(1, N+1), dtype =int)/N
+
+                #wykres dystrybuanty
+                plt.plot(xsorted,F,color="black")
+                plt.scatter(xsorted, Fni, color="red")
+                plt.legend(["F(x)","Fni"])
+                plt.show()
+
+                #obliczanie wartości
+                rozkladKS = st.kstwobign()
+
+                Dn = max(np.abs(F - Fni))
+                stTest = np.sqrt(N)*Dn
+                pvalue = 1 - rozkladKS.cdf(stTest)
+
+                print('\nDn = {}, p-value = {}, wartość p-value jest {} od Dn'.format(Dn, pvalue, 'większa' if pvalue > Dn else 'mniejsza'))
+
+                if pvalue > Dn:
+                    print('\nWartość pvalue jest wyższa od statystyki testowej Dn - można uznać, że próba podchodzi z rozkładu normalnego')
+
+                else:
+                    print('\nWartość pvalue jest niższa od statystyki Dn - nie można uznać, że próba pochodzi z rozkładu normalnego')
+
+
+        except TypeError:
+            print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
 
 # Wykresy
 
