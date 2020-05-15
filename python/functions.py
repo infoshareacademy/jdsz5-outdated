@@ -59,56 +59,57 @@ def description(x):
 # uznać, że średnie w między kolumnami się różnią :P 
 
 
-def porownaj_srednie(x,y, a = 0.05):
-    
-    if x is y:
-        print('Należy wybrać dwie różne kolumny.')
-        
-    else:
-        print('Sprawdzanie normalności rozkładu 1 zmiennej')
-        sprawdz_rozklad(x)
-        
-        
-        print('\nSprawdzanie normalności rozkładu 2 zmiennej:')
-        sprawdz_rozklad(y)
-        
-        try:
-            mx = np.mean(x)
-            my = np.mean(y)
-            nx = len(x)
-            ny = len(y)
+def porownaj_srednie(a = 0.05):
+    @interact
+    def selectVariable(column1 = list(patient.columns)):
 
-            sx = np.std(x)
-            sy = np.std(y)
+        @interact
+        def selectVariablevalue(var_column1 = list(patient[column1].unique()),
+                               var_column2 = list(patient[column1].unique())):
+            pass
+            @interact
+            def selectCounter(counter = ['patient_id']):
+                sprawdz_rozklad1(patient.loc[patient[column1] == var_column1, counter]) 
+                sprawdz_rozklad1(patient.loc[patient[column1] == var_column2, counter])
+                
+                try:
+                    x = patient.loc[patient[column1] == var_column1, counter]
+                    y = patient.loc[patient[column1] == var_column2, counter]
+                    mx = np.mean(x)
+                    my = np.mean(y)
+                    nx = len(x)
+                    ny = len(y)
+                    sx = np.std(x)
+                    sy = np.std(y)
 
-            u = mx - my/np.sqrt(sx**2/nx + sy**2/ny)
-            
-            rozkladNormalny = st.norm()
+                    u = mx - my/np.sqrt(sx**2/nx + sy**2/ny)
 
-            pvalue = rozkladNormalny.cdf(u)
+                    rozkladNormalny = st.norm()
 
-
-            print('Wartość p-value {} jest {} niż wartość a {}'.format(pvalue, 'większa' if pvalue >a else 'mniejsza', a))
-
-            if pvalue > a:
-                  print('Nie ma podstaw do odrzucenia hipotezy zerowej')
-            else:
-                  print('Istnieją przesłanki do odrzucenia hipotezy zerowej na rzecz alternatywnej - średnia pierwszej zmiennej jest niższa od średniej drugiej zmiennej')
+                    pvalue = rozkladNormalny.cdf(u)
 
 
-        except TypeError:
-            print('Zmienne w podanych kolumnach muszą mieć charakter numeryczny')
+                    print('Wartość p-value {} jest {} niż wartość a {}'.format(pvalue, 'większa' if pvalue >a else 'mniejsza', a))
+
+                    if pvalue > a:
+                          print('Nie ma podstaw do odrzucenia hipotezy zerowej')
+                    else:
+                          print('Istnieją przesłanki do odrzucenia hipotezy zerowej na rzecz alternatywnej - średnia pierwszej zmiennej jest niższa od średniej drugiej zmiennej')
 
 
-
-            
-        except:
-            print('Wystąpił nieoczekiwany błąd')
+                except TypeError:
+                    print('Zmienne w podanych kolumnach muszą mieć charakter numeryczny')
 
 
 
 
-##Test normalności rozkładu
+                except:
+                    print('Wystąpił nieoczekiwany błąd')
+
+
+
+
+##Test normalności rozkładu wywolywany samodzielnie
 
 def sprawdz_rozklad():
     @interact
@@ -180,6 +181,76 @@ def sprawdz_rozklad():
 
         except TypeError:
             print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
+            
+            
+## Test normalnosci rozkladu wywolywany w funkcji porownaj_srednie            
+def sprawdz_rozklad1(x):
+    
+    x.dropna(inplace=True) #konieczne jest usunięcie nanów by f-cja działała
+    N = len(x)
+
+    try:
+        if N <= 100:
+            #Test Shapiro-Wilka
+            st.shapiro(x)
+            test = st.shapiro(x)[0]
+            pvalue = st.shapiro(x)[1]
+
+            print('Statystyka testowa = {}, p-value = {}, wartość p-value jest {} od statystyki testowej'.format(test, pvalue, 'większa' if pvalue > test else 'mniejsza'))
+
+            if pvalue > test:
+                print('Wartość pvalue jest wyższa od statystyki testowej - można uznać, że próba podchodzi z rozkładu normalnego')
+
+            else:
+                print('Wartość pvalue jest niższa od statystyki testowej - nie można uznać, że próba pochodzi z rozkładu normalnego')
+
+
+
+        else:
+            #Test Kołomogowa-Smirnova
+            #Ewentualnie zamiast rysowania tutaj wykresu można przywołać zdefiniowaną funkcję
+
+
+            x = np.array(x)
+            x = x.reshape(N,)
+
+            #plt.hist(x, bins = 25, edgecolor = 'black')
+
+            mx = np.mean(x)
+            sx = np.std(x)
+
+            rozkladNormalny = st.norm(mx,sx)
+
+            xsorted = np.sort(x)
+
+            F = rozkladNormalny.cdf(xsorted)
+
+            Fni = np.fromiter(range(1, N+1), dtype =int)/N
+
+            #wykres dystrybuanty
+            plt.plot(xsorted,F,color="black")
+            plt.scatter(xsorted, Fni, color="red")
+            plt.legend(["F(x)","Fni"])
+            plt.show()
+
+            #obliczanie wartości
+            rozkladKS = st.kstwobign()
+
+            Dn = max(np.abs(F - Fni))
+            stTest = np.sqrt(N)*Dn
+            pvalue = 1 - rozkladKS.cdf(stTest)
+
+            print('\nDn = {}, p-value = {}, wartość p-value jest {} od Dn'.format(Dn, pvalue, 'większa' if pvalue > Dn else 'mniejsza'))
+
+            if pvalue > Dn:
+                print('\nWartość pvalue jest wyższa od statystyki testowej Dn - można uznać, że próba podchodzi z rozkładu normalnego')
+
+            else:
+                print('\nWartość pvalue jest niższa od statystyki Dn - nie można uznać, że próba pochodzi z rozkładu normalnego')
+
+
+    except TypeError:
+        print('Zmienne we wskazanej kolumnie muszą mieć charakter numeryczny.')
 
 # Wykresy
 
