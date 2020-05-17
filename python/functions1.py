@@ -173,6 +173,7 @@ def boxplot(categorical, numerical):
         df.pivot(columns=categorical, values=numerical).plot.box(figsize=(30, 20),fontsize=20)
         plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
         plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+        plt.xticks(rotation=90)
         plt.xlabel(categorical, fontsize=24);
 
     except (KeyError, NameError):
@@ -214,6 +215,7 @@ def time_plot(data, dates, date_range):
             df.groupby(dates)[data].count().cumsum().plot.line(figsize=(30, 20),fontsize=20).legend(loc=2, prop={'size': 30})
             plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
             plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+            plt.xticks(rotation=90)
             plt.xlabel(dates, fontsize=24);
 
     except (KeyError, NameError):
@@ -237,6 +239,7 @@ def line_plot(dates, data, groupping):
             df.plot.line(figsize=(30, 20), fontsize=20).legend(loc=2, prop={'size': 30})
             plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
             plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+            plt.xticks(rotation=90)
             plt.xlabel(dates, fontsize=24);
 
     except (KeyError, NameError):
@@ -253,6 +256,7 @@ def bar_plot(column, data):
         df.pivot_table(index=column, values=data, aggfunc='count').sort_values(by=data, ascending=False).head(10).plot.bar(figsize=(30, 20),fontsize=20).legend(loc=2, prop={'size': 30})
         plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
         plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+        plt.xticks(rotation=90)
         plt.xlabel(column, fontsize=24);
 
     except (KeyError, NameError):
