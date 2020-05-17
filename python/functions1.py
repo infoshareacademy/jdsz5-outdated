@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np 
 import scipy.stats as st
 from datetime import datetime
+import folium
 
 Datasets = {
     'current_dataset' : 'patient',
@@ -18,7 +19,8 @@ Datasets = {
                 'categorical' : ['sex', 'age', 'country', 'province', 'city', 'infection_case', 'state'],
                 'count_col' : 'patient_id',
                 'numerical': ['birth_year'],
-                'counter' : ['birth_year','patient_id']
+                'counter' : ['birth_year','patient_id'],
+                'categorical_srednie' : ['sex', 'province', 'state']
             },
     'region' : {'path' : 'data/Region.csv',
                 'subset' : 'all',
@@ -28,30 +30,37 @@ Datasets = {
                 'categorical' : ['province', 'city' ],
                 'count_col' : ['code'],
                 'geo' : ['latitude', 'longitude'],
-                'counter' : ['code']
+                'counter' : ['code'],
+                'dates' : 'none',
+                'categorical_srednie' : ['province']
     },
     'weather': {'path': 'data/Weather.csv',
                'subset': 'all',
-               'drop': ['code','most_wind_direction'],
+               'drop': 'all',
                'name': 'weather',
                 'numerical' : ['min_temp','max_temp','precipitation','max_wind_speed', 'avg_temp', 'avg_relative_humidity'],
                 'dates' : ['date'],
-                'categorical': ['province', 'city']
-               },
+                'categorical': ['province', 'city', 'most_wind_direction'],
+                'counter' : ['code'],
+                'count_col' : ['code'],
+                'categorical_srednie' : ['province', 'most_wind_direction']
+              },
     'patient-region': { 'name' : 'patient-region',
                         'numerical' : ['birth_year', 'elementary_school_count', 'kindergarten_count', 'university_count', 'academy_ratio', 'elderly_population_ratio', 'elderly_alone_ratio', 'nursing_home_count'],
                         'categorical' : ['sex', 'age', 'country', 'province', 'city', 'infection_case', 'state'],
                         'count_col' : ['code', 'patient_id'],
                         'geo' : ['latitude', 'longitude'],
                         'counter' : ['code', 'birth_year','patient_id'],
-                        'dates' : ['symptom_onset_date', 'confirmed_date', 'released_date']
+                        'dates' : ['symptom_onset_date', 'confirmed_date', 'released_date'],
+                        'categorical_srednie' : ['sex', 'province', 'state']
     },
     'patient-weather': {'name' : 'patient-weather',
                         'numerical' : ['avg_temp', 'avg_relative_humidity', 'birth_year'],
-                        'date' : ['date', 'symptom_onset_date', 'confirmed_date', 'released_date'],
+                        'dates' : ['date', 'symptom_onset_date', 'confirmed_date', 'released_date'],
                         'categorical' : ['sex', 'age', 'country', 'province', 'city', 'infection_case', 'state'],
                         'count_col' : ['patient_id'],
-                        'counter' : ['birth_year','patient_id']
+                        'counter' : ['birth_year','patient_id'],
+                        'categorical_srednie' : ['sex', 'province', 'state']
 
 
     }
@@ -129,7 +138,6 @@ def merge_data(dataset):
     else:
         print('Nie mozna polaczyc dwoch takich samych datasetow')
 
-
 def show_current():
     print(f'Obecnie pracujesz na tabeli {Datasets["current_dataset"]}')
 
@@ -195,14 +203,18 @@ def time_plot(data, dates, date_range):
     df = Datasets[Datasets['current_dataset']]['data']
 
     try:
-        start = str(date_range[0])
-        end = str(date_range[1])
+        if Datasets[Datasets['current_dataset']]['dates'] == 'none':
+            print('Dataset nie ma kolumny z datami')
 
-        df = df[df[dates].between(start, end)]
-        df.groupby(dates)[data].count().cumsum().plot.line(figsize=(30, 20),fontsize=20).legend(loc=2, prop={'size': 30})
-        plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
-        plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
-        plt.xlabel(dates, fontsize=24);
+        else:
+            start = str(date_range[0])
+            end = str(date_range[1])
+
+            df = df[df[dates].between(start, end)]
+            df.groupby(dates)[data].count().cumsum().plot.line(figsize=(30, 20),fontsize=20).legend(loc=2, prop={'size': 30})
+            plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
+            plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+            plt.xlabel(dates, fontsize=24);
 
     except (KeyError, NameError):
         print('Niepoprawna nazwa zmiennej')
@@ -215,14 +227,17 @@ def line_plot(dates, data, groupping):
     df = Datasets[Datasets['current_dataset']]['data']
 
     try:
+        if Datasets[Datasets['current_dataset']]['dates'] == 'none':
+            print('Tabela nie zawiera dat')
 
-        columns = df.pivot_table(index=dates, columns=groupping, values=data, aggfunc='count').count().sort_values(
-            ascending=False).head(11).index
-        df = df.pivot_table(index=dates, columns=groupping, values=data, aggfunc='count')[columns]
-        df.plot.line(figsize=(30, 20), fontsize=20).legend(loc=2, prop={'size': 30})
-        plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
-        plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
-        plt.xlabel(dates, fontsize=24);
+        else:
+            columns = df.pivot_table(index=dates, columns=groupping, values=data, aggfunc='count').count().sort_values(
+                ascending=False).head(11).index
+            df = df.pivot_table(index=dates, columns=groupping, values=data, aggfunc='count')[columns]
+            df.plot.line(figsize=(30, 20), fontsize=20).legend(loc=2, prop={'size': 30})
+            plt.tick_params(axis = 'both', which = 'major', labelsize = 24)
+            plt.tick_params(axis = 'both', which = 'minor', labelsize = 16)
+            plt.xlabel(dates, fontsize=24);
 
     except (KeyError, NameError):
         print('Niepoprawna nazwa zmiennej')
@@ -258,7 +273,7 @@ def porownaj_srednie(a = 0.05):
     df = Datasets[Datasets['current_dataset']]['data']
 
     @interact
-    def selectVariable(column1 = list(df.columns)):
+    def selectVariable(column1 = Datasets[Datasets['current_dataset']]['categorical_srednie']):
 
         @interact
         def selectVariablevalue(var_column1 = list(df[column1].unique()),
@@ -268,7 +283,7 @@ def porownaj_srednie(a = 0.05):
             def selectCounter(counter = Datasets[Datasets['current_dataset']]['counter']):
                 sprawdz_rozklad1(df.loc[df[column1] == var_column1, counter])
                 sprawdz_rozklad1(df.loc[df[column1] == var_column2, counter])
-                
+
                 try:
                     x = df.loc[df[column1] == var_column1, counter]
                     y = df.loc[df[column1] == var_column2, counter]
@@ -517,3 +532,18 @@ def bootstrap_gender():
         pvalues.append(p)
 
     print('Wynik testu istotny w {0} symulacji'.format("{:.1%}".format(np.mean(pvalues))))
+
+
+def show_map():
+    if Datasets['current_dataset'] not in ('patient-region', 'region'):
+        print('Mapa dostepna jedynie dla tabeli region')
+    else:
+        df = Datasets[Datasets['current_dataset']]['data']
+        locations = Datasets[Datasets['current_dataset']]['data'][['latitude', 'longitude']]
+        locationlist = locations.values.tolist()
+        location = [round(i, 2) for i in locationlist[7]]
+
+        map = folium.Map(location=location, zoom_start=12)
+        for point in range(0, len(locationlist)):
+            folium.Marker(locationlist[point], popup=df['patient_id'][point]).add_to(map)
+        return map
