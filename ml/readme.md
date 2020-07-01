@@ -10,7 +10,8 @@ Na początku przygotowano bazę do analiz (data cleaning i wrangling), potem prz
 Następnie przeprowadzona zastała analiza wartości odstających i normalizacja danych do celu analiz. Póżniej stowrzono i przetestowano następujące modele: regresji liniowej, lasów losowych, support vector machine (svm), k-nearest neighbours (knn) oraz xgboost. Do każdego z nich dobrano hiperparametry i wybrano najbardziej optymalne. Ostatecznie wybrano najbardziej optymalny model i poprzez przetestowanie skuteczności najbardziej obiecujących modeli na danych testowych.
 
 ## Użycie 
-Właściwą aplikacją jest notebook app.ipynb
+
+Właściwą aplikacją jest jupyter-notebook app.ipynb
 ```python```
 
 ## Cel biznesowy:
