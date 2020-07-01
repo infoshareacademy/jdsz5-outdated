@@ -7,15 +7,16 @@
 Aplikacja pozwala nam na przewidywanie cen mieszkań w Ames in Iowa. Wybrane metryki sukcesu modeli to  R2 (statystykę wyjaśniającą za ile zmienności odpowiadają dane), mse (średni błąd kwadratowy) oraz średni błąd mierzony w procentach.
 
 Na początku przygotowano bazę do analiz (data cleaning i wrangling), potem przygotowano zmienne do analiz (Feature Engineering).
-Następnie przeprowadzona zastała analiza wartości odstających i normalizacja danych do celu analiz. Póżniej stowrzono i przetestowano następujące modele: regresji liniowej i logistycznej, drzew decyzyjnych i lasów losowych, support vector machine (svm), k-next neighbours (knn) oraz xgboost Do każdego z nich dobrano hiperparametry i wybrano najbardziej optymalne. Ostatecznie wybrano najbardziej optymalny model i poprzez przetestowanie skuteczności najbardziej obiecujących modeli na danych testowych.
+Następnie przeprowadzona zastała analiza wartości odstających i normalizacja danych do celu analiz. Póżniej stowrzono i przetestowano następujące modele: regresji liniowej, lasów losowych, support vector machine (svm), k-nearest neighbours (knn) oraz xgboost. Do każdego z nich dobrano hiperparametry i wybrano najbardziej optymalne. Ostatecznie wybrano najbardziej optymalny model i poprzez przetestowanie skuteczności najbardziej obiecujących modeli na danych testowych.
 
 ## Użycie 
-Właściwą aplikacją jest notebook app.ipynb
+
+Właściwą aplikacją jest jupyter-notebook app.ipynb
 ```python```
 
 ## Cel biznesowy:
 
-Applikacja może stanowić pomoc zarówno dla podażowej cześci rynku nieruchomości mieszkaniowych: agencji nieruchomości i osób fizycznych chcących wycenić konkretną nieruchomość do sprzedarzy jak i dla cześci popytowej: gdyż powzoli na ocenę czy oferta sprzedaży jest korzystna, optymalna czy nie korzystna poprzez estymację jaka powinna być jej cena biorąc pod uwagę jej cechy.
+Applikacja może stanowić wsparcie zarówno dla podażowej cześci rynku nieruchomości mieszkaniowych: agencji nieruchomości i osób fizycznych chcących wycenić konkretną nieruchomość do sprzedaży, jak i dla cześci popytowej: gdyż pozwoli ona na ocenę czy oferta sprzedaży jest korzystna, optymalna czy niekorzystna poprzez estymację jaka powinna być cena konkretnej nieruchomosci, biorąc pod uwagę jej cechy.
 
 ## Przetestowane modele:
 
