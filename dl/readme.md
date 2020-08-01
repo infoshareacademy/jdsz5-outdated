@@ -1,12 +1,12 @@
 
 # JDSZ5-Outdated projekt deep learning
 # Flowers recognition
-## The pictures are divided into five classes: chamomile, tulip, rose, sunflower, dandelion.
+## The pictures are divided into five classes: daisy, tulip, rose, sunflower, dandelion.
 ## For each class there are about 800 photos. Photos are not high resolution, about 320x240 pixels. Photos are not reduced to a single size, they have different proportions!
 
 ## Opis
 Sieć ma za zadanie klasyfikować zdjęcia kwiatów do jednej z 5 klas:
-1) rumianek
+1) stokrotka
 2) tulipan
 3) róża
 4) słonecznik
