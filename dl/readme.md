@@ -18,11 +18,12 @@ Właściwą aplikacją jest google colab
 ```python```
 
 ## Cel biznesowy:
-
+Ta aplikacja jest to proof of concept rozwiązania, ktore mogłby pozwolić na usprawneinie pracy sortowni kwiatów. Innym zastosowaniem to aplikacja na smartfona pozwalająca rozpoznawać gatunek kwiatów.
 
 ## model:
 
-
+Podczas pracy nad projektem spawdzono nastepujące modele: Xception, VGG16, Mobilenet v2, oraz przeprowadzono transfer learning Mobilenet v2 z wagami Imaginet.
+Do tego zadanie najlepiej sprawdził się VGG16 dlatego wykonano dla niego dodatkowe kalibracje (fine tunning)
 
 ## Pakiety
 ```
